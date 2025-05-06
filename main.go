@@ -1,17 +1,19 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
+	"fmt"
+	"log"
+
+	"github.com/valyala/fasthttp"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello, World!")
+func handler(ctx *fasthttp.RequestCtx) {
+	fmt.Fprintf(ctx, "Hello, World!")
 }
 
 func main() {
-    http.HandleFunc("/", handler)
-    log.Println("Server starting on port 8080...")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Server starting on port 8080...")
+	if err := fasthttp.ListenAndServe(":8080", handler); err != nil {
+		log.Fatalf("Error starting server: %s", err)
+	}
 }
