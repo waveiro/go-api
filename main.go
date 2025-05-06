@@ -17,7 +17,7 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
         // Respond to GET /
         ctx.SetStatusCode(fasthttp.StatusOK)
         ctx.SetContentType("text/plain; charset=utf-8")
-        ctx.WriteString("Hello, World!")
+        ctx.WriteString("Hello, World 2!")
     default:
         ctx.Error("Not Found", fasthttp.StatusNotFound)
     }
