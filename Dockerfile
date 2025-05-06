@@ -1,5 +1,6 @@
 ############# 1. Build stage #############################################
-FROM golang:1.23-alpine AS builder          # or the latest Go x.y-alpine tag
+# Use the latest Go x.y-alpine tag
+FROM golang:1.23-alpine AS builder
 
 # Install build tools you might need
 RUN apk add --no-cache git
@@ -22,7 +23,7 @@ FROM alpine:3.20
 WORKDIR /app
 COPY --from=builder /app/main .
 
-# Add TLS root certificates so Go’s net/http can talk HTTPS endpoints
+# Add TLS root certificates so Go's net/http can talk HTTPS endpoints
 RUN apk add --no-cache ca-certificates
 
 EXPOSE 8080
