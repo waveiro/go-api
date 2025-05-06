@@ -1,0 +1,15 @@
+version: "3.9"           # any 3.x or 2.x version works the same here
+
+services:
+  api:
+    build:               # build from the Dockerfile in the current dir
+      context: .
+      dockerfile: Dockerfile
+    container_name: my-api
+    ports:
+      - "8081:8080"      # host : container
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["go", "run", "main.go"]
