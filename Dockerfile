@@ -1,30 +1,24 @@
-############# 1. Build stage #############################################
-# Use the latest Go x.y-alpine tag
+# 1) Build stage
 FROM golang:1.23-alpine AS builder
+WORKDIR /app
 
-# Install build tools you might need
-RUN apk add --no-cache git
-
-WORKDIR /src
-
-# Copy only go.mod first – makes use of layer‑caching
-COPY go.mod ./
+# Cache module downloads
+COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the rest of the source code and compile
+# Build the binary
 COPY . .
-# ‑trimpath strips source paths; CGO_ENABLED=0 makes a static binary
-RUN CGO_ENABLED=0 go build -trimpath -o /app/main .
+RUN go build -o server .
 
-############# 2. Runtime stage ###########################################
-# Use the tiniest possible runtime image that still has a shell & SSL certs
-FROM alpine:3.20
+# 2) Final stage
+FROM alpine:latest
+WORKDIR /root/
 
-WORKDIR /app
-COPY --from=builder /app/main .
+# Copy the binary
+COPY --from=builder /app/server .
 
-# Add TLS root certificates so Go's net/http can talk HTTPS endpoints
-RUN apk add --no-cache ca-certificates
-
+# Expose port inside container (choose 8080)
 EXPOSE 8080
-ENTRYPOINT ["./main"]
+
+# Run the service
+CMD ["./server"]

@@ -1,19 +1,24 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/valyala/fasthttp"
+    "github.com/valyala/fasthttp"
 )
 
-func handler(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "Hello, World!")
+func main() {
+    // Listen on :8080 inside the container
+    if err := fasthttp.ListenAndServe(":8080", requestHandler); err != nil {
+        panic(err)
+    }
 }
 
-func main() {
-	log.Println("Server starting on port 8080...")
-	if err := fasthttp.ListenAndServe(":8080", handler); err != nil {
-		log.Fatalf("Error starting server: %s", err)
-	}
+func requestHandler(ctx *fasthttp.RequestCtx) {
+    switch string(ctx.Path()) {
+    case "/":
+        // Respond to GET /
+        ctx.SetStatusCode(fasthttp.StatusOK)
+        ctx.SetContentType("text/plain; charset=utf-8")
+        ctx.WriteString("Hello, World!")
+    default:
+        ctx.Error("Not Found", fasthttp.StatusNotFound)
+    }
 }

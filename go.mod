@@ -1,13 +1,11 @@
 module go-api
 
-go 1.23.0
+go 1.23
 
-toolchain go1.23.8
-
-require github.com/valyala/fasthttp v1.61.0
+require github.com/valyala/fasthttp v1.45.0
 
 require (
-	github.com/andybalholm/brotli v1.1.1 // indirect
-	github.com/klauspost/compress v1.18.0 // indirect
+	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/klauspost/compress v1.16.3 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 )
